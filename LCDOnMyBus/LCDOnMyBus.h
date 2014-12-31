@@ -10,7 +10,7 @@
 
 #include "MyBus/MyBus.h"
 #include "HD44780/HD44780.h"
-#include <avr/pgmspace.h>
+#include "BigFont/BigFont.h"
 
 #include <avr/io.h>
 #include <stdio.h>
@@ -40,7 +40,17 @@
 #define CMD_LCD_GoTo				23		// x, y
 
 
-//Other
+// Other
+
+
+
+
+
+
+
+
+
+
 
 //#define MSG_CRC 
 //=================================================================================================================================
