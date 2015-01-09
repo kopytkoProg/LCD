@@ -7,6 +7,9 @@
 
 #include "MyBus.h"
 
+#define RECEIVING_MSG  0
+#define HANDLING_MSG  1
+
 void clear_tx_buffer(void);
 uint8_t can_send(void);
 volatile char* cp_to_buffer(volatile char *s1, const char *s2);
@@ -118,14 +121,11 @@ void send_buffer(uint8_t byte_to_send)
 //--------------------------------------------------------------
 //--------------------------------------------------------------
 uint8_t volatile recive_counter = 0;
-
-#define RECEIVING_MSG  0
-#define HANDLING_MSG  1
 uint8_t volatile state = RECEIVING_MSG;
 /**
 After call can be received new message
 */
-void volatile set_last_message_as_handled(void)
+void set_last_message_as_handled(void)
 {
 	usart_rx_bufor_ind = 0;
 	recive_counter = 0;
@@ -136,7 +136,7 @@ void volatile set_last_message_as_handled(void)
 /**
 
 */
-uint8_t volatile is_message_ready(void)
+uint8_t is_message_ready(void)
 {
 	return state == HANDLING_MSG;
 }

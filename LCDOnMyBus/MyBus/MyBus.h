@@ -56,7 +56,7 @@ char volatile usart_rx_bufor[RX_BUFFER_SIZE];								//bufor nadawania
 void send_data (volatile char *s, uint8_t length);
 void init_my_buss(void);
 uint8_t crc (volatile char *s, uint8_t length);
-void volatile set_last_message_as_handled(void);
-uint8_t volatile is_message_ready(void);
+void set_last_message_as_handled(void);
+uint8_t is_message_ready(void);
 
 #endif /* MYBUS_H_ */
