@@ -97,6 +97,19 @@ int main(void)
 
 					//--------------------------------------------------------------
 					
+					case CMD_LCD_WRITE_CHARACTERS_HOME_LINE_WRAPE:
+					
+					LCD_Home();
+					for(int i = 0; i < usart_rx_bufor[MSG_DATA_LENGTH]; i++)
+					{
+						if(i % LCD_WIDTH == 0) LCD_GoTo(0, i / LCD_WIDTH);
+						LCD_WriteData(usart_rx_bufor[MSG_DATA_START + i]);
+					}
+					
+					break;
+
+					//--------------------------------------------------------------
+					
 					case CMD_LCD_CLEAR:
 					LCD_Clear();
 					break;
@@ -129,8 +142,8 @@ int main(void)
 				}
 				usart_rx_bufor[usart_rx_bufor_ind - 1] = crc(usart_rx_bufor, usart_rx_bufor_ind - 1);
 				send_data(usart_rx_bufor, usart_rx_bufor_ind);					// Send response
-				usart_rx_bufor_ind = 0;
-
+				set_last_message_as_recieved();//usart_rx_bufor_ind = 0;											// Now can
+				
 			}
 			
 		}

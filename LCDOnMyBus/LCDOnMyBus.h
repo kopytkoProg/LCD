@@ -24,20 +24,21 @@
 // COMMANDS :
 
 // Led
-#define CMD_ENABLE_LED0				1		// No data
-#define CMD_DISABLE_LED0			2		// No data
-#define CMD_TOGGLE_LED0				3		// No data
+#define CMD_ENABLE_LED0								1		// No data
+#define CMD_DISABLE_LED0							2		// No data
+#define CMD_TOGGLE_LED0								3		// No data
 
 
 // Port
-#define CMD_GET_PORTB				10		// Byte
-#define CMD_SET_PORTB				11		// Byte
+#define CMD_GET_PORTB								10		// Byte
+#define CMD_SET_PORTB								11		// Byte
 
 // LCD
-#define CMD_LCD_WRITE_CHARACTERS	20		// Characters
-#define CMD_LCD_CLEAR				21		// No data
-#define CMD_LCD_HOME				22		// No data
-#define CMD_LCD_GoTo				23		// x, y
+#define CMD_LCD_WRITE_CHARACTERS					20		// Characters
+#define CMD_LCD_CLEAR								21		// No data
+#define CMD_LCD_HOME								22		// No data
+#define CMD_LCD_GoTo								23		// x, y
+#define CMD_LCD_WRITE_CHARACTERS_HOME_LINE_WRAPE	24		// Characters, start at home
 
 
 // Other

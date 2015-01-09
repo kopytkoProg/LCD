@@ -114,43 +114,60 @@ void send_buffer(uint8_t byte_to_send)
 }
 //--------------------------------------------------------------
 //--------------------------------------------------------------
-//--------------------------------------------------------------
 uint8_t recive_counter = 0;
+/**
+After call can be received new message
+*/
+void set_last_message_as_recieved(void)
+{
+	usart_rx_bufor_ind = 0;
+	recive_counter = 0;
+}
+
+//--------------------------------------------------------------
 ISR(USART_RX_vect)
 {
-	if(recive_counter < RX_BUFFER_SIZE){
-		usart_rx_bufor[usart_rx_bufor_ind++] = UDR0;
-		recive_counter++;
-		
-		if(recive_counter == 1)
-		{
-			reset_timer0();
-			enable_timer0();
-		}
-		else if(recive_counter < 3)
-		{
-			reset_timer0();
-		}
-		else if(usart_rx_bufor_ind - 3 < usart_rx_bufor[MSG_DATA_LENGTH])		// Data
-		{
-			reset_timer0();
-		}
-		else if(usart_rx_bufor_ind - 4 < usart_rx_bufor[MSG_DATA_LENGTH])		// CRC
-		{
-			reset_timer0();
-		}
-		else																	//success
-		{
-			disable_timer0();
-			recive_counter = 0;
-		}
-		
-	}
-	else																		// To many received data, it is error
+	if(recive_counter == usart_rx_bufor_ind)
 	{
-		disable_timer0();														// Clear all data
-		recive_counter = 0;
-		usart_rx_bufor_ind = 0;													// Clear all data
+		if(recive_counter < RX_BUFFER_SIZE)
+		{
+			usart_rx_bufor[usart_rx_bufor_ind++] = UDR0;
+			recive_counter++;
+			
+			if(recive_counter == 1)
+			{
+				reset_timer0();
+				enable_timer0();
+			}
+			else if(recive_counter < 3)
+			{
+				reset_timer0();
+			}
+			else if(usart_rx_bufor_ind - 3 < usart_rx_bufor[MSG_DATA_LENGTH])		// Data
+			{
+				reset_timer0();
+			}
+			else if(usart_rx_bufor_ind - 4 < usart_rx_bufor[MSG_DATA_LENGTH])		// CRC
+			{
+				reset_timer0();
+			}
+			else																	//success
+			{
+				disable_timer0();
+				recive_counter = 0;
+			}
+			
+		}
+		else																		// To many received data, it is error
+		{
+			disable_timer0();														// Clear all data
+			recive_counter = 0;
+			usart_rx_bufor_ind = 0;													// Clear all data
+		}
+	}
+	else																			// New data com while previews data are not handled
+	{
+		
 	}
 }
 //--------------------------------------------------------------
