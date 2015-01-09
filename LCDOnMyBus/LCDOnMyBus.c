@@ -48,7 +48,7 @@ int main(void)
 	while(1)
 	{
 		
-		if (usart_rx_bufor_ind >= 4 && usart_rx_bufor[MSG_DATA_LENGTH] + 4 == usart_rx_bufor_ind)	// great or equal 4 because packet always have address, command,  length and CRC
+		if (is_message_ready())	// great or equal 4 because packet always have address, command,  length and CRC
 		{																							//(End is when usart_rx_bufor_ind is equals 4(addr, cmd, length, crc) + usart_rx_bufor_ind[1](length of data field))
 			
 			if(usart_rx_bufor[usart_rx_bufor_ind-1] == crc(usart_rx_bufor, usart_rx_bufor_ind - 1)	// check CRC
@@ -142,10 +142,8 @@ int main(void)
 				}
 				usart_rx_bufor[usart_rx_bufor_ind - 1] = crc(usart_rx_bufor, usart_rx_bufor_ind - 1);
 				send_data(usart_rx_bufor, usart_rx_bufor_ind);					// Send response
-				set_last_message_as_recieved();//usart_rx_bufor_ind = 0;											// Now can
-				
 			}
-			
+			set_last_message_as_handled();//usart_rx_bufor_ind = 0;											// Now can 
 		}
 	}
 }

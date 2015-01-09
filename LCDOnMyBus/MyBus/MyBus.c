@@ -22,6 +22,8 @@ void reset_timer0(void);
 
 void init_my_buss(void)
 {
+	usart_tx_bufor_ind = 0;
+	usart_rx_bufor_ind = 0;
 	init_timer0();															// init timer
 	usart_inicjuj();														// initialize USART (RS-232)
 }
@@ -110,30 +112,44 @@ ISR(USART_UDRE_vect)
 void send_buffer(uint8_t byte_to_send)
 {
 	data_to_send = byte_to_send;
+	usart_tx_bufor_ind = 0;
 	UCSR0B |= (1<<UDRIE0);
 }
 //--------------------------------------------------------------
 //--------------------------------------------------------------
-uint8_t recive_counter = 0;
+uint8_t volatile recive_counter = 0;
+
+#define RECEIVING_MSG  0
+#define HANDLING_MSG  1
+uint8_t volatile state = RECEIVING_MSG;
 /**
 After call can be received new message
 */
-void set_last_message_as_recieved(void)
+void volatile set_last_message_as_handled(void)
 {
 	usart_rx_bufor_ind = 0;
 	recive_counter = 0;
+	state = RECEIVING_MSG;
+}
+
+//--------------------------------------------------------------
+/**
+
+*/
+uint8_t volatile is_message_ready(void)
+{
+	return state == HANDLING_MSG;
 }
 
 //--------------------------------------------------------------
 ISR(USART_RX_vect)
 {
-	if(recive_counter == usart_rx_bufor_ind)
+	if(state == RECEIVING_MSG)
 	{
 		if(recive_counter < RX_BUFFER_SIZE)
 		{
-			usart_rx_bufor[usart_rx_bufor_ind++] = UDR0;
-			recive_counter++;
-			
+			usart_rx_bufor[recive_counter++] = UDR0;
+						
 			if(recive_counter == 1)
 			{
 				reset_timer0();
@@ -143,20 +159,18 @@ ISR(USART_RX_vect)
 			{
 				reset_timer0();
 			}
-			else if(usart_rx_bufor_ind - 3 < usart_rx_bufor[MSG_DATA_LENGTH])		// Data
+			else if(recive_counter < usart_rx_bufor[MSG_DATA_LENGTH] + 4)		// Data and crc
 			{
 				reset_timer0();
 			}
-			else if(usart_rx_bufor_ind - 4 < usart_rx_bufor[MSG_DATA_LENGTH])		// CRC
-			{
-				reset_timer0();
-			}
-			else																	//success
+			else //if (recive_counter == usart_rx_bufor[MSG_DATA_LENGTH] + 4)		//success
 			{
 				disable_timer0();
+				usart_rx_bufor_ind = recive_counter;
+				state = HANDLING_MSG;
 				recive_counter = 0;
 			}
-			
+
 		}
 		else																		// To many received data, it is error
 		{
@@ -198,6 +212,6 @@ ISR (TIMER0_COMPA_vect)														// Failed transmission
 	disable_timer0();
 	recive_counter = 0;														// Clear All buffers
 	usart_rx_bufor_ind = 0;													// Clear All buffers
-	
+
 }
 //--------------------------------------------------------------
