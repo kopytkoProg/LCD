@@ -46,11 +46,11 @@
 
 // =========================================================
 
-volatile unsigned int usart_tx_bufor_ind;									//indeks bufora nadawania
-char volatile usart_tx_bufor[TX_BUFFER_SIZE];								//bufor nadawania
+volatile unsigned int usart_tx_bufor_ind;									//transmit buffer index  
+char volatile usart_tx_bufor[TX_BUFFER_SIZE];								//transmit buffer 
 
-volatile unsigned int usart_rx_bufor_ind;									//indeks bufora nadawania
-char volatile usart_rx_bufor[RX_BUFFER_SIZE];								//bufor nadawania
+volatile unsigned int usart_rx_bufor_ind;									//receive buffer index, contain size of received data. New value set when new massage received completed
+char volatile usart_rx_bufor[RX_BUFFER_SIZE];								//receive buffer
 
 
 void send_data (volatile char *s, uint8_t length);
