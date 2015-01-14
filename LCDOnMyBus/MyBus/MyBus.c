@@ -22,6 +22,15 @@ void disable_timer0(void);
 void reset_timer0(void);
 
 
+void set_transmit(void)
+{
+	PORTD |= (1<<PD2);
+}
+
+void set_receive(void)
+{
+	PORTD &= ~(_BV(PD2));
+}
 
 void init_my_buss(void)
 {
@@ -29,6 +38,8 @@ void init_my_buss(void)
 	usart_rx_bufor_ind = 0;
 	init_timer0();															// init timer
 	usart_inicjuj();														// initialize USART (RS-232)
+	DDRD |= (1<<DDD2);
+	set_receive();
 }
 
 
@@ -56,7 +67,7 @@ void usart_inicjuj(void)
 	// 8 bits
 	// 1 bit stop
 	// parity none
-	UCSR0B = (1<<TXEN0) | (1<<RXEN0) | (1<<RXCIE0);
+	UCSR0B = (1<<TXEN0) | (1<<RXEN0) | (1<<RXCIE0)| (1<<TXCIE0);
 }
 //--------------------------------------------------------------
 //--------------------------------------------------------------
@@ -97,6 +108,10 @@ void send_data (volatile char *d, uint8_t length)
 }
 //--------------------------------------------------------------
 //--------------------------------------------------------------
+ISR(USART_TX_vect)
+{
+	if (data_to_send==0) set_receive();
+}
 ISR(USART_UDRE_vect)
 {
 	if(usart_tx_bufor_ind < TX_BUFFER_SIZE && data_to_send > 0)
@@ -116,6 +131,7 @@ void send_buffer(uint8_t byte_to_send)
 {
 	data_to_send = byte_to_send;
 	usart_tx_bufor_ind = 0;
+	set_transmit();
 	UCSR0B |= (1<<UDRIE0);
 }
 //--------------------------------------------------------------
@@ -149,7 +165,7 @@ ISR(USART_RX_vect)
 		if(recive_counter < RX_BUFFER_SIZE)
 		{
 			usart_rx_bufor[recive_counter++] = UDR0;
-						
+			
 			if(recive_counter == 1)
 			{
 				reset_timer0();
@@ -212,6 +228,8 @@ ISR (TIMER0_COMPA_vect)														// Failed transmission
 	disable_timer0();
 	recive_counter = 0;														// Clear All buffers
 	usart_rx_bufor_ind = 0;													// Clear All buffers
+	state = RECEIVING_MSG;
+	//PORTB ^= (_BV(PB1));
 
 }
 //--------------------------------------------------------------

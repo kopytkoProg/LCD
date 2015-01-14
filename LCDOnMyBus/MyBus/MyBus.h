@@ -31,7 +31,10 @@
 //mo¿liwa do realizacji otrzymasz ostrze¿enie:
 //#warning "Baud rate achieved is higher than allowed"
 
-#define BAUD 9600 //5760													//tutaj podaj ¿¹dan¹ prêdkoœæ transmisji
+#define BAUD 250000	//9600 //5760											//tutaj podaj ¿¹dan¹ prêdkoœæ transmisji
+// rs-485 
+//	|speed			|distance		|
+//	|250000			|~300m			|
 #include <util/setbaud.h>													//linkowanie tego pliku musi byæ po zdefiniowaniu BAUD
 
 #define TX_BUFFER_SIZE 128
