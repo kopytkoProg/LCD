@@ -18,7 +18,7 @@
 #include <util/delay.h>
 
 //=================================================================================================================================
-#define MY_ADDRESS 20
+#define MY_ADDRESS 21
 #define MASTER_ADDRESS 1
 
 // COMMANDS :
@@ -42,7 +42,7 @@
 
 
 // Other
-
+#define CMD_HELLO_WORLD								200		// Hello word
 
 
 
