@@ -31,7 +31,7 @@
 //mo¿liwa do realizacji otrzymasz ostrze¿enie:
 //#warning "Baud rate achieved is higher than allowed"
 
-#define BAUD 250000	//9600 //5760											//tutaj podaj ¿¹dan¹ prêdkoœæ transmisji
+#define BAUD 38400 //250000	//9600 //5760											//tutaj podaj ¿¹dan¹ prêdkoœæ transmisji
 // rs-485 
 //	|speed			|distance		|
 //	|250000			|~300m			|
