@@ -18,7 +18,7 @@
 #include <util/delay.h>
 
 //=================================================================================================================================
-#define MY_ADDRESS 21
+#define MY_ADDRESS 20
 #define MASTER_ADDRESS 1
 
 // COMMANDS :

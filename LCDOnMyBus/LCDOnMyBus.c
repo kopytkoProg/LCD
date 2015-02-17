@@ -148,7 +148,11 @@ int main(void)
 				}
 				usart_rx_bufor[usart_rx_bufor_ind - 1] = crc(usart_rx_bufor, usart_rx_bufor_ind - 1);
 				send_data(usart_rx_bufor, usart_rx_bufor_ind);					// Send response
+			}else if(usart_rx_bufor[usart_rx_bufor_ind-1] != crc(usart_rx_bufor, usart_rx_bufor_ind - 1)){
+				//PORTB ^= (_BV(PB1));
 			}
+			
+			
 			set_last_message_as_handled();//usart_rx_bufor_ind = 0;											// Now can 
 		}
 	}
